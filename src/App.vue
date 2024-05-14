@@ -5,3 +5,11 @@
 <template>
     <RouterView/>
 </template>
+
+<style lang="scss">
+    body {
+        @include desktop {
+            background: red;
+        }
+    }
+</style>

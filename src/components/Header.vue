@@ -1,42 +1,33 @@
 <script>
+import MenuMobile from './MenuMobile.vue';
+import Form from './Form.vue';
+import Profile from './Profile.vue';
+
     export default {
-        
+        components: {
+            MenuMobile,
+            Form,
+            Profile
+        }
     }
 </script>
 
 <template>
     <header>
-        <nav class="menu-mobile">
-            <ul class="menu-mobile-nav">
-                <li>#</li>
-            </ul>
-        </nav>
-        <span class="open-menu-mobile">
-            <i class="ri-menu-line"></i>
-        </span>
+        <MenuMobile />
         <h1 class="logo">LOGO</h1>
-        <form action="">
-            <input type="text" placeholder="Pesquise">
-            <button class="search">
-                <i class="ri-search-line"></i>
-            </button>
-        </form>
-        <div class="my-acount">
-            <span class="my-acount-wishlist">
-                <i class="ri-hearts-line"></i>
-            </span>
-            <span class="my-acount-profile">
-                <i class="ri-account-circle-line"></i>
-            </span>
-            <span class="my-acount-cart">
-                <i class="ri-shopping-cart-line"></i>
-            </span>
-        </div>
+        <Form />
+        <Profile />
     </header>
 </template>
 
 <style lang="scss">
     header {
-        background: #212121;
+        background: var(--primary-color);
+        padding: 10px 16px;
+        width: 100%;
+        display: flex;
+        align-content: center;
+        justify-content: center;
     }
 </style>
