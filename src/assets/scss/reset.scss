@@ -1,0 +1,91 @@
+// Reset básico
+html,
+body,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+th,
+td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+// Correção de fonte
+body {
+  line-height: 1;
+  font-size: 12px;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+
+// Elementos de lista
+ol,
+ul {
+  list-style: none;
+}
+
+// Elementos embutidos
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+
+// Tabelas
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// Formulários
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-decoration,
+input[type='search']::-webkit-search-results-button,
+input[type='search']::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type='search'] {
+  -webkit-appearance: none;
+  appearance: none;
+  -moz-appearance: none;
+}
+
+input[type="text"] {
+  border: none;
+  outline: none;
+  &:focus {
+    outline: none;
+    border: none;
+  }
+}

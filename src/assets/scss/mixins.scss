@@ -1,0 +1,19 @@
+@mixin image64($image, $display, $bs, $w, $h) {
+    background: url($image) no-repeat center;
+    background-size: $bs;
+    display: $display;
+    width: $w;
+    height: $h;
+}
+
+@mixin mobile {
+    @media (max-width: 768px) { @content; }
+}
+
+@mixin tablet {
+    @media (min-width: 768px) { @content; }
+}
+
+@mixin desktop {
+    @media (min-width: 992px) { @content; }
+}
