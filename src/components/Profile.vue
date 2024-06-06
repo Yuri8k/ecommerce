@@ -1,9 +1,3 @@
-<script>
-export default {
-    
-}
-</script>
-
 <template>   
     <div class="my-account">
         <span class="my-account-cart">

@@ -34,7 +34,6 @@ export default {
 <template>
   <div>
     <Filter />
-    <Form />
 
     <ul class="product-list">
       <li class="product-item" v-for="product in filteredProducts" :key="product.id">
