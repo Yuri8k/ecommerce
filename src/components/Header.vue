@@ -1,12 +1,10 @@
 <script>
-import MenuMobile from './MenuMobile.vue';
-import Form from './Form.vue';
 import Profile from './Profile.vue';
+import Category from './Category.vue';
 
     export default {
         components: {
-            MenuMobile,
-            Form,
+            Category,
             Profile
         }
     }
@@ -14,10 +12,9 @@ import Profile from './Profile.vue';
 
 <template>
     <header>
-        <MenuMobile />
-        <h1 class="logo">Designer <b>Logo</b></h1>
-        <Form />
+        <h1 class="logo">Yuri <b>Dev</b></h1>
         <Profile />
+        <Category />
     </header>
 </template>
 
@@ -26,21 +23,33 @@ import Profile from './Profile.vue';
         background: var(--header);
         padding: 10px 16px;
         width: 100%;
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         align-content: center;
-        justify-content: space-between;
+        justify-content: center;
         @include desktop {
             padding: 20px 100px;
+            display: flex;
+            align-content: center;
+            justify-content: space-between;
         }
 
         .logo {
+            display: flex;
+            align-content: center;
+            justify-content: center;
             color: var(--body-font-color);
-            font-size: 26px;
+            font-size: 22px;
             font-style: normal;
             font-weight: 500;
-            line-height: 120%; 
+            line-height: initial; 
             b {
                 color: var(--primary-color);
+                line-height: initial; 
+            }
+            @include desktop {
+                order: 1;
+                font-size: 26px;
             }
         }
     }

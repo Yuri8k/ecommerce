@@ -8,7 +8,6 @@ export default {
     <div class="my-account">
         <span class="my-account-cart">
             <i class="ri-shopping-cart-line"></i>
-            <span class="my-account-cart-text">Cart</span>
             <span id="qtd" class="my-account-cart-qtd">0</span>
         </span>
         <span class="my-account-wishlist">
@@ -26,49 +25,81 @@ export default {
         align-content: center;
         justify-content: center;
         gap: 5px;
+        height: 30px;
         @include desktop {
             gap: 12px;
+            height: 44px;
+            order: 3;
         }
 
         &-wishlist, &-profile {
-            padding: 11px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            padding: 5px;
             display: flex;
             align-content: center;
             justify-content: center;
             gap: 8px;
             border-radius: 8px;
             background: var(--white);
+            @include desktop {
+                padding: 11px;
+                width: 44px;
+                height: 44px;
+            }
+
+            &:hover {
+                background: var(--primary-color);
+                transition: all .3s ease-in-out;
+                i {
+                    filter: invert(1);
+                }
+            }
 
             i {
-                font-size: 22px;
+                font-size: 18px;
+                @include desktop {
+                    font-size: 22px;
+                }
             }
         }
 
         &-cart {
-            padding: 11px 16px;
+            cursor: pointer;
+            min-width: 30px;
+            height: 30px;
+            padding: 5px;
             display: flex;
             align-content: center;
             justify-content: center;
             gap: 8px;
             border-radius: 8px;
             background: var(--white);
-
-            i {
-                font-size: 22px;
+            transition: all .3s ease-in-out;
+            @include desktop {
+                padding: 11px 16px;
+                min-width: 44px;
+                height: 44px;
             }
 
-            &-text {
-                color: var(--body-font-color);
-                text-align: center;
-                font-size: $base-font-size;
-                font-style: normal;
-                font-weight: 500;
-                line-height: 110%; /* 13.2px */
-                text-transform: capitalize;
-                margin-right: 4px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+            &:hover {
+                background: var(--primary-color);
+                transition: all .3s ease-in-out;
+                i {
+                    filter: invert(1);
+                }
+                #qtd {
+                    background: var(--white);
+                    color: var(--primary-color);
+                }
+            }
+
+            i {
+                font-size: 18px;
+                @include desktop {
+                    font-size: 22px;
+                }
             }
 
             &-qtd {

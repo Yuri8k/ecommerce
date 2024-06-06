@@ -2,7 +2,7 @@
 export default {
   data() {
     return {
-      name: "VAI SE FUDE",
+      name: "",
     };
   },
 };
