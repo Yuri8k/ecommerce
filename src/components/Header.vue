@@ -13,7 +13,7 @@ import Category from './Category.vue';
 <template>
     <header>
         <h1 class="logo">Yuri <b>Dev</b></h1>
-        <Profile />
+        <Profile/>
         <Category />
     </header>
 </template>
