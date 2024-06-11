@@ -13,13 +13,16 @@ export default {
       useWishlistStore().closeWishlist();
     },
     truncate(value, limit) {
-        if (!value) return '';
-        value = value.toString();
-        return value.length > limit ? value.substring(0, limit) + '...' : value;
+      if (!value) return "";
+      value = value.toString();
+      return value.length > limit ? value.substring(0, limit) + "..." : value;
     },
     formatPrice(price) {
-      return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    }
+      return price.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      });
+    },
   },
   props: {
     addToWishlist: Function,
@@ -57,7 +60,9 @@ export default {
                 </button>
               </div>
             </div>
-            <button class="btn-buy"><i class="ri-shopping-cart-2-fill"></i> COMPRAR</button>
+            <button class="btn-buy">
+              <i class="ri-shopping-cart-2-fill"></i> COMPRAR
+            </button>
           </div>
         </li>
       </ul>
@@ -89,15 +94,18 @@ export default {
 
   .wishlist {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: var(--white);
     padding: 20px;
     width: 90%;
     height: 90%;
     @include desktop {
+      top: 0;
       right: 0;
       left: initial;
+      transform: initial;
       width: 100%;
       max-width: 300px;
       height: 100%;
@@ -124,20 +132,20 @@ export default {
     }
 
     &-title {
-        color: var(--body-font-color);
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 110%; /* 35.2px */
-        text-transform: capitalize;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
+      color: var(--body-font-color);
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 110%; /* 35.2px */
+      text-transform: capitalize;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
 
-        i {
-            color: var(--primary-color);
-        }
+      i {
+        color: var(--primary-color);
+      }
     }
 
     &-content {
@@ -253,16 +261,16 @@ export default {
             line-height: 130%; /* 20.8px */
             text-transform: capitalize;
             border-radius: 8px;
-            transition: all .3s ease-in-out;
+            transition: all 0.3s ease-in-out;
 
             i {
-                font-size: 24px;
-                font-weight: 400;
+              font-size: 24px;
+              font-weight: 400;
             }
 
             &:hover {
-                background: var(--body-font-color-hover);
-                transition: all .3s ease-in-out;
+              background: var(--body-font-color-hover);
+              transition: all 0.3s ease-in-out;
             }
           }
         }
