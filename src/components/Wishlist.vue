@@ -1,59 +1,29 @@
 <script>
-import { computed } from "vue";
-import { useWishlistStore } from "@/stores/wishlistStore";
-
 export default {
-  computed: {
-    isActive() {
-      return useWishlistStore().isActive;
-    },
-  },
-  methods: {
-    closeWishlist() {
-      useWishlistStore().closeWishlist();
-    },
-    truncate(value, limit) {
-      if (!value) return "";
-      value = value.toString();
-      return value.length > limit ? value.substring(0, limit) + "..." : value;
-    },
-    formatPrice(price) {
-      return price.toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      });
-    },
-  },
-  props: {
-    addToWishlist: Function,
-    removeFromWishlist: Function,
-    wishlist: Array,
-  },
+ 
 };
 </script>
 
 <template>
   <div
     class="wishlist-overlay"
-    :class="{ 'wishlist-overlay': true, active: isActive }"
   >
     <div class="wishlist">
-      <button @click="closeWishlist" class="wishlist-close">
+      <button class="wishlist-close">
         <i class="ri-close-line"></i>
       </button>
       <h2 class="wishlist-title"><i class="ri-heart-fill"></i> FAVORITOS</h2>
       <ul class="wishlist-content">
-        <li v-for="product in wishlist" :key="product.id">
+        <li>
           <figure>
-            <img :src="product.image" :alt="product.title" />
+            <img/>
           </figure>
           <div class="product-item-content">
             <div class="product-item-name">
-              <h2 class="name">{{ truncate(product.title, 15) }}</h2>
+              <h2 class="name"></h2>
               <div class="content-price">
-                <h4 class="price">{{ formatPrice(product.price) }}</h4>
+                <h4 class="price"></h4>
                 <button
-                  @click="removeFromWishlist(product)"
                   class="wishlist-remove"
                 >
                   <i class="ri-delete-bin-line"></i>

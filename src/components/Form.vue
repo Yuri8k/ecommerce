@@ -1,21 +1,6 @@
 <script>
-import { ref } from "vue";
-import { useProductStore } from "../stores/productStore";
-
 export default {
-  setup() {
-    const productStore = useProductStore();
-    const query = ref(productStore.searchQuery);
-
-    const onInput = () => {
-      productStore.setSearchQuery(query.value);
-    };
-
-    return {
-      query,
-      onInput,
-    };
-  },
+  
 };
 </script>
 
@@ -23,8 +8,6 @@ export default {
   <div id="form">
     <form class="form" action="">
       <input
-        v-model="query"
-        @input="onInput"
         type="text"
         placeholder="Search here..."
       />

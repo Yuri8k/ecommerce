@@ -1,11 +1,6 @@
 <script>
-import { useWishlistStore } from '@/stores/wishlistStore';
-
 export default {
     methods: {
-    toggleWishlist() {
-      useWishlistStore().toggleWishlist();
-    }
   }
 };
 </script>
@@ -16,7 +11,7 @@ export default {
       <i class="ri-shopping-cart-line"></i>
       <span id="qtd" class="my-account-cart-qtd">0</span>
     </span>
-    <button class="my-account-wishlist" @click="toggleWishlist">
+    <button class="my-account-wishlist">
       <i class="ri-heart-line"></i>
     </button>
     <span class="my-account-profile">

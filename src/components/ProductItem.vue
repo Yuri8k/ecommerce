@@ -1,89 +1,127 @@
 <script>
-import { onMounted, computed } from 'vue';
-import Filter from './Filter.vue';
-import Wishlist from './Wishlist.vue';
-import { useProductStore } from '../stores/productStore';
-import { useWishlistStore } from '../stores/wishlistStore';
+import { getAllProducts, getProduct } from '@/stores/productStore';
 
 export default {
   data() {
     return {
-      active: false,
+      allProducts: [],
+      product: {}
     }
   },
-  components: {
-    Filter,
-    Wishlist
-  },
-  setup() {
-    const productStore = useProductStore();
-    const wishlistStore = useWishlistStore();
-
-    onMounted(() => {
-      productStore.fetchProducts();
-    });
-
-    const filteredProducts = computed(() => productStore.filteredProducts);
-
-    const addToWishlist = (product) => {
-      wishlistStore.addToWishlist(product);
-    };
-
-    const removeFromWishlist = (productId) => {
-      wishlistStore.removeFromWishlist(productId);
-    };
-
-    return {
-      addToWishlist,
-      removeFromWishlist,
-      isLoading: productStore.isLoading,
-      error: productStore.error,
-      filteredProducts,
-      wishlist: wishlistStore.wishlist,
-      truncate(value, limit) {
-        if (!value) return '';
-        value = value.toString();
-        return value.length > limit ? value.substring(0, limit) + '...' : value;
-      },
-      formatPrice(price) {
-        return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  methods: {
+    async fetchAllProducts() {
+      try {
+        this.allProducts = await getAllProducts();
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
       }
-    };
+    },
+    async fetchProduct(id) {
+      try {
+        this.product = await getProduct(id);
+      } catch (error) {
+        console.error(`Failed to fetch product ${id}:`, error);
+      }
+    },
+    formatPrice(value) {
+      return value.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      });
+    },
+  },
+  created() {
+    this.fetchAllProducts();
   }
 };
 </script>
 
 <template>
   <div>
-    <Filter />
-    <Wishlist
-      :wishlist="wishlist"
-      :addToWishlist="addToWishlist"
-      :removeFromWishlist="removeFromWishlist"
-      :isActive="isOverlayActive" @close-overlay="closeOverlay"
-    />
+
+    <div class="product-detail-overlay">
+      <div class="product-detail">
+        <div class="product-detail-content">
+          <figure>
+            <img :src="product.image" :alt="product.title">
+          </figure>
+          <div class="product-detail-content-infos">
+            <h2 class="detail-name">{{ product.category }}</h2>
+            <h4 class="deatail-category">{{ product.category }}</h4>
+            <h5 class="detail-description">{{ product.description }}</h5>
+          </div>
+          <div class="product-detail-content-buy">
+            <h4 class="price">{{ product.price }}</h4>
+            <button class="btn-buy">COMPRAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <ul class="product-list">
-      <li class="product-item" v-for="product in filteredProducts" :key="product.id">
+      <li v-for="item in allProducts" :key="item.id" class="product-item">
         <figure>
-          <img :src="product.image" :alt="product.title">
-          <button @click="addToWishlist(product)" class="wishlist">
+          <img :src="item.image" :alt="item.title">
+          <button class="wishlist">
             <i class="ri-heart-3-line"></i>
           </button>
         </figure>
         <div class="product-item-content">
           <div class="product-item-name">
-            <h2 class="name">{{ truncate(product.title, 30) }}</h2>
-            <h4 class="price">{{ formatPrice(product.price) }}</h4>
+            <h2 class="name">{{ item.title }}</h2>
+            <h4 class="price">{{ formatPrice(item.price) }}</h4>
           </div>
-          <button class="btn-buy"><i class="ri-shopping-cart-2-line"></i></button>
+        </div>
+        <div class="product-item-buy">
+          <form action="" class="qtd">
+            <input type="text" placeholder="-">
+            <input type="text" placeholder="1">
+            <input type="text" placeholder="+">
+          </form>
+          <div class="product-item-buy-group">
+            <button @click="fetchProduct(item.id)" class="btn-view"><i class="ri-eye-line"></i></button>
+            <button class="btn-buy"><i class="ri-shopping-cart-2-line"></i></button>
+          </div>
         </div>
       </li>
     </ul>
   </div>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
+
+.product-detail-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  .product-detail {
+    width: 85%;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    @include desktop {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    &-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
 .product-list {
   padding: 40px 15px;
   display: grid;
@@ -91,6 +129,7 @@ export default {
   align-content: center;
   justify-content: center;
   gap: 20px;
+  width: 100%;
   @include desktop {
     grid-template-columns: repeat(4, 1fr);
     padding: 40px;
@@ -154,6 +193,7 @@ export default {
       align-content: center;
       justify-content: space-between;
       gap: 10px;
+      width: 100%;
 
       .product-item-name {
         display: flex;
@@ -181,8 +221,39 @@ export default {
           text-transform: capitalize;
         }
       }
+    }
 
-      .btn-buy {
+    &-buy {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+
+      .qtd {
+        width: 100%;
+        max-width: 120px;
+        height: 44px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+
+        input {
+          font-size: 14px;
+          width: inherit;
+          text-align: center;
+        }
+      }
+
+      &-group {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        .btn-buy {
         cursor: pointer;
         display: flex;
         align-content: center;
@@ -196,15 +267,36 @@ export default {
 
         i {
           font-size: 24px;
+          filter: invert(1);
         }
 
         &:hover {
           transition: all 0.3s ease-in-out;
           background: var(--btn-buy-hover);
-          i {
-            filter: invert(1);
-          }
         }
+      }
+
+      .btn-view {
+        cursor: pointer;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 44px;
+        padding: 10px;
+        border-radius: 8px;
+        background: var(--btn-default);
+        transition: all 0.3s ease-in-out;
+
+        i {
+          font-size: 24px;
+        }
+
+        &:hover {
+          transition: all 0.3s ease-in-out;
+          opacity: 0.6;
+        }
+      }
       }
     }
   }
