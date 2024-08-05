@@ -1,27 +1,32 @@
 <script>
-import { getAllProducts, getProduct } from '@/stores/productStore';
+import axios from 'axios';
 
 export default {
   data() {
     return {
       allProducts: [],
-      product: {}
+      product: {},
+      activeModal: false
     }
   },
   methods: {
-    async fetchAllProducts() {
-      try {
-        this.allProducts = await getAllProducts();
-      } catch (error) {
-        console.error('Failed to fetch products:', error);
-      }
+    getAllProducts() {
+      axios.get(`https://fakestoreapi.com/products`)
+        .then((res) => {
+          this.allProducts = res.data
+        })
+        .catch((error) => {
+          console.error(`Failed to fetch product with ID ${id}:`, error);
+        })
     },
-    async fetchProduct(id) {
-      try {
-        this.product = await getProduct(id);
-      } catch (error) {
-        console.error(`Failed to fetch product ${id}:`, error);
-      }
+    getProduct(id) {
+      axios.get(`https://fakestoreapi.com/products/${id}`)
+        .then((res) => {
+          this.product = res.data
+        })
+        .catch((error) => {
+          console.error(`Failed to fetch product with ID ${id}:`, error);
+        })
     },
     formatPrice(value) {
       return value.toLocaleString("pt-BR", {
@@ -29,9 +34,15 @@ export default {
         currency: "BRL",
       });
     },
+    toggleModal() {
+      this.activeModal = !this.activeModal;
+    },
+    closeModal() {
+      this.activeModal = false;
+    },
   },
-  created() {
-    this.fetchAllProducts();
+  mounted() {
+    this.getAllProducts();
   }
 };
 </script>
@@ -39,20 +50,21 @@ export default {
 <template>
   <div>
 
-    <div class="product-detail-overlay">
+    <div @click="toggleModal" :class="{ active: activeModal }" class="product-detail-overlay">
       <div class="product-detail">
+        <button class="product-detail-close" @click.stop="closeModal">
+          <i class="ri-close-line"></i>
+        </button>
         <div class="product-detail-content">
           <figure>
-            <img :src="product.image" :alt="product.title">
+            <img :src="product.image" :alt="product.title" />
           </figure>
           <div class="product-detail-content-infos">
-            <h2 class="detail-name">{{ product.category }}</h2>
-            <h4 class="deatail-category">{{ product.category }}</h4>
-            <h5 class="detail-description">{{ product.description }}</h5>
-          </div>
-          <div class="product-detail-content-buy">
-            <h4 class="price">{{ product.price }}</h4>
-            <button class="btn-buy">COMPRAR</button>
+            <h2 class="detail-name">{{ product.title }}</h2>
+            <h4 class="detail-category">{{ product.category }}</h4>
+            <h5 class="detail-description"><b>Description:</b><br> {{ product.description }}</h5>
+            <h4 v-if="product && product.price" class="price">{{ formatPrice(product.price) }}</h4>
+            <button class="btn-buy">COMPRAR<i class="ri-shopping-cart-2-line"></i></button>
           </div>
         </div>
       </div>
@@ -79,7 +91,8 @@ export default {
             <input type="text" placeholder="+">
           </form>
           <div class="product-item-buy-group">
-            <button @click="fetchProduct(item.id)" class="btn-view"><i class="ri-eye-line"></i></button>
+            <button @click="getProduct(item.id), activeModal = !activeModal" class="btn-view"><i
+                class="ri-eye-line"></i></button>
             <button class="btn-buy"><i class="ri-shopping-cart-2-line"></i></button>
           </div>
         </div>
@@ -89,9 +102,10 @@ export default {
 </template>
 
 <style scoped lang="scss">
-
 .product-detail-overlay {
   position: fixed;
+  opacity: 0;
+  visibility: hidden;
   top: 0;
   left: 0;
   width: 100%;
@@ -100,7 +114,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: -1;
+  transition: all .4s ease-in-out;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 1000;
+    transition: all .4s ease-in-out;
+  }
 
   .product-detail {
     width: 85%;
@@ -109,15 +131,111 @@ export default {
     align-items: center;
     justify-content: center;
     background: var(--white);
+    position: relative;
+
     @include desktop {
-      width: 100%;
-      max-width: 600px;
+      width: 80%;
+    }
+
+    &-close {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 35px;
+      height: 35px;
+      background: var(--white);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 100%;
+      box-shadow: 0 4px 8px #ccc;
+      cursor: pointer;
     }
 
     &-content {
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 10px;
+
+      figure {
+        width: 100%;
+        display: block;
+        @include desktop {
+          min-width: 400px;
+        }
+
+        img {
+          width: 100%;
+          display: block;
+        }
+      }
+
+      &-infos {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 10px;
+
+        .detail-name {
+          color: var(--body-font-color);
+          font-size: 32px;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 130%;
+          text-transform: capitalize;
+        }
+        .detail-category {
+          color: var(--primary-dark);
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 130%;
+          text-transform: capitalize;
+        }
+        .detail-description {
+          color: var(--body-font-color);
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 160%;
+          text-transform: capitalize;
+          margin: 10px 0;
+        }
+        .price {
+          color: var(--body-font-color);
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 110%;
+          text-transform: capitalize;
+        }
+        .btn-buy {
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          min-width: 44px;
+          height: 44px;
+          padding: 20px;
+          color: var(--white);
+          border-radius: 8px;
+          background: var(--btn-buy);
+          transition: all 0.3s ease-in-out;
+
+          i {
+            font-size: 24px;
+          }
+
+          &:hover {
+            transition: all 0.3s ease-in-out;
+            background: var(--btn-buy-hover);
+          }
+        }
+      }
     }
   }
 }
@@ -130,6 +248,7 @@ export default {
   justify-content: center;
   gap: 20px;
   width: 100%;
+
   @include desktop {
     grid-template-columns: repeat(4, 1fr);
     padding: 40px;
@@ -181,6 +300,7 @@ export default {
         &:hover {
           transition: all 0.3s ease-in-out;
           background: var(--primary-color);
+
           i {
             filter: invert(1);
           }
@@ -203,21 +323,20 @@ export default {
         gap: 10px;
 
         .name {
-          color: var(--primary-dark);
-          font-family: Inter;
+          color: var(--body-font-color);
           font-size: 16px;
           font-style: normal;
           font-weight: 400;
-          line-height: 130%; /* 20.8px */
+          line-height: 130%;
           text-transform: capitalize;
         }
+
         .price {
           color: var(--body-font-color);
-          font-family: Inter;
           font-size: 18px;
           font-style: normal;
           font-weight: 600;
-          line-height: 110%; /* 19.8px */
+          line-height: 110%;
           text-transform: capitalize;
         }
       }
@@ -254,49 +373,49 @@ export default {
         gap: 5px;
 
         .btn-buy {
-        cursor: pointer;
-        display: flex;
-        align-content: center;
-        justify-content: center;
-        min-width: 44px;
-        height: 44px;
-        padding: 10px;
-        border-radius: 8px;
-        background: var(--btn-buy);
-        transition: all 0.3s ease-in-out;
-
-        i {
-          font-size: 24px;
-          filter: invert(1);
-        }
-
-        &:hover {
+          cursor: pointer;
+          display: flex;
+          align-content: center;
+          justify-content: center;
+          min-width: 44px;
+          height: 44px;
+          padding: 10px;
+          border-radius: 8px;
+          background: var(--btn-buy);
           transition: all 0.3s ease-in-out;
-          background: var(--btn-buy-hover);
-        }
-      }
 
-      .btn-view {
-        cursor: pointer;
-        display: flex;
-        align-content: center;
-        justify-content: center;
-        min-width: 44px;
-        height: 44px;
-        padding: 10px;
-        border-radius: 8px;
-        background: var(--btn-default);
-        transition: all 0.3s ease-in-out;
+          i {
+            font-size: 24px;
+            filter: invert(1);
+          }
 
-        i {
-          font-size: 24px;
+          &:hover {
+            transition: all 0.3s ease-in-out;
+            background: var(--btn-buy-hover);
+          }
         }
 
-        &:hover {
+        .btn-view {
+          cursor: pointer;
+          display: flex;
+          align-content: center;
+          justify-content: center;
+          min-width: 44px;
+          height: 44px;
+          padding: 10px;
+          border-radius: 8px;
+          background: var(--btn-default);
           transition: all 0.3s ease-in-out;
-          opacity: 0.6;
+
+          i {
+            font-size: 24px;
+          }
+
+          &:hover {
+            transition: all 0.3s ease-in-out;
+            opacity: 0.6;
+          }
         }
-      }
       }
     }
   }
