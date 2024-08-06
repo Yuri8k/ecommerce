@@ -7,3 +7,7 @@
     <RouterView/>
     <FooterComponent />
 </template>
+
+<style lang="scss">
+
+</style>
