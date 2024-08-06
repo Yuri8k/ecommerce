@@ -3,5 +3,7 @@
 </script>
 
 <template>
+    <HeaderComponent />
     <RouterView/>
+    <FooterComponent />
 </template>
