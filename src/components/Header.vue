@@ -1,18 +1,9 @@
 <template>
     <div>
-        <ul>
-            <li @click="compAtivo = 'PaginaSobre'">Pagina sobre</li>
-            <li @click="compAtivo = 'PaginaServico'">Pagina serviços</li>
-        </ul>
-        <transition mode="out-in">
-            <component :is="compAtivo"></component>
-        </transition>
     </div>
 </template>
 
 <script>
-import PaginaServico from './PaginaServico.vue';
-import PaginaSobre from './PaginaSobre.vue';
 
 export default {
    data() {
@@ -21,8 +12,6 @@ export default {
         }
    },
    components: {
-    PaginaServico,
-    PaginaSobre
    }
 }
 </script>
