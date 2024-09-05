@@ -11,16 +11,17 @@ export default {
   },
   methods: {
     getAllProducts() {
-      axios.get(`https://fakestoreapi.com/products`)
+      axios.get(`https://api.escuelajs.co/api/v1/products`)
         .then((res) => {
           this.allProducts = res.data
+          console.log(res.data);
         })
         .catch((error) => {
           console.error(`Failed to fetch product with ID ${id}:`, error);
         })
     },
     getProduct(id) {
-      axios.get(`https://fakestoreapi.com/products/${id}`)
+      axios.get(`https://api.escuelajs.co/api/v1/products/${id}`)
         .then((res) => {
           this.product = res.data
         })
@@ -72,8 +73,8 @@ export default {
 
     <ul class="product-list">
       <li v-for="item in allProducts" :key="item.id" class="product-item">
-        <figure>
-          <img :src="item.image" :alt="item.title">
+      <figure>
+          <img :src="item.category.image" :alt="item.title">
           <button class="wishlist">
             <i class="ri-heart-3-line"></i>
           </button>
